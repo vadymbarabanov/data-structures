@@ -6,6 +6,8 @@ const DoublyLinkedListErrors = error{
     OutOfBounds,
 };
 
+/// DoublyLinkedList is a data structure which implements
+/// doubly linked list data type interface
 pub fn DoublyLinkedList(comptime T: type) type {
     return struct {
         const Self = @This();
