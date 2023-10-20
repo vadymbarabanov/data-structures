@@ -7,7 +7,7 @@ const LinkedListErrors = error{
 };
 
 /// LinkedList is a data structure which implements
-/// linked list data type interface
+/// the linked list abstract data type interface
 pub fn LinkedList(comptime T: type) type {
     return struct {
         const Self = @This();

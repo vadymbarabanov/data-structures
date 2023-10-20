@@ -7,7 +7,7 @@ const DoublyLinkedListErrors = error{
 };
 
 /// DoublyLinkedList is a data structure which implements
-/// doubly linked list data type interface
+/// the doubly linked list abstract data type interface
 pub fn DoublyLinkedList(comptime T: type) type {
     return struct {
         const Self = @This();

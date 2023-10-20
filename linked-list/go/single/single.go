@@ -13,8 +13,8 @@ type node struct {
 	ref  *node
 }
 
-// Single is a struct which implements
-// singly linked list data type interface
+// Single is a data structure which implements
+// the linked list abstract data type interface
 type Single struct {
 	head *node
 	tail *node

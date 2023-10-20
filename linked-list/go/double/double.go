@@ -14,8 +14,8 @@ type node struct {
 	next *node
 }
 
-// Double is a struct which implements
-// doubly linked list data type interface
+// Double is a data structure which implements
+// the doubly linked list abstract data type interface
 type Double struct {
 	head *node
 	tail *node
