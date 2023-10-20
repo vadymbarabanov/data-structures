@@ -51,11 +51,10 @@ pub fn Stack(comptime T: type) type {
 
         pub fn pop(self: *Self) !T {
             if (self.head) |head| {
-                var data = head.data;
+                defer self.allocator.destroy(head);
                 self.head = head.next;
-                self.allocator.destroy(head);
                 self.size -= 1;
-                return data; 
+                return head.data; 
             } else {
                 return StackErrors.StackIsEmpty;
             }
