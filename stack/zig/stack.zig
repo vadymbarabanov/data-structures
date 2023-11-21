@@ -1,7 +1,7 @@
 const std = @import("std");
 const expect = std.testing.expect;
 
-const StackErrors = error {
+const ErrStack = error{
     StackIsEmpty,
 };
 
@@ -40,11 +40,8 @@ pub fn Stack(comptime T: type) type {
         pub fn push(self: *Self, value: T) !void {
             var node = try self.allocator.create(Node);
             node.data = value;
-            node.next = null;
+            node.next = self.head;
 
-            if (self.head) |head| {
-                node.next = head;
-            }
             self.head = node;
             self.size += 1;
         }
@@ -54,9 +51,9 @@ pub fn Stack(comptime T: type) type {
                 defer self.allocator.destroy(head);
                 self.head = head.next;
                 self.size -= 1;
-                return head.data; 
+                return head.data;
             } else {
-                return StackErrors.StackIsEmpty;
+                return ErrStack.StackIsEmpty;
             }
         }
     };
@@ -77,9 +74,8 @@ test "pop" {
     defer stack.deinit();
 
     _ = stack.pop() catch |err| {
-        try expect(err == StackErrors.StackIsEmpty);
+        try expect(err == ErrStack.StackIsEmpty);
     };
-    
 
     try stack.push(2);
     try stack.push(3);
@@ -195,7 +191,6 @@ test "tower of hanoi" {
     try expect(try stack_c.pop() == 4);
 
     _ = stack_c.pop() catch |err| {
-        try expect(err == StackErrors.StackIsEmpty);
+        try expect(err == ErrStack.StackIsEmpty);
     };
 }
-
