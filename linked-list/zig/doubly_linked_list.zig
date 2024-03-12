@@ -33,54 +33,53 @@ pub fn DoublyLinkedList(comptime T: type) type {
         }
 
         fn deinit(self: *Self) void {
-            var current = self.head;
-            while (current) |curr| {
-                current = curr.next;
-                self.allocator.destroy(curr);
+            var head = self.head;
+            while (head) |current| {
+                head = current.next;
+                self.allocator.destroy(current);
             }
         }
 
-        fn append(self: *Self, value: T) !void {
+        fn append(self: *Self, data: T) !void {
             var node = try self.allocator.create(Node);
-            node.data = value;
+            node.data = data;
             node.prev = null;
             node.next = null;
 
             if (self.tail) |tail| {
                 tail.next = node;
                 node.prev = tail;
-                self.tail = node;
             } else {
                 self.head = node;
-                self.tail = node;
             }
 
+            self.tail = node;
             self.size += 1;
         }
 
-        fn prepend(self: *Self, value: T) !void {
+        fn prepend(self: *Self, data: T) !void {
             var node = try self.allocator.create(Node);
-            node.data = value;
+            node.data = data;
             node.prev = null;
             node.next = null;
 
             if (self.head) |head| {
                 node.next = head;
                 head.prev = node;
-                self.head = node;
             } else {
-                self.head = node;
                 self.tail = node;
             }
+
+            self.head = node;
             self.size += 1;
         }
 
         fn at(self: *Self, index: usize) !T {
-            var current = self.head;
+            var head = self.head;
             var idx: usize = 0;
-            while (current) |curr| {
-                if (idx == index) return curr.data;
-                current = curr.next;
+            while (head) |current| {
+                if (idx == index) return current.data;
+                head = current.next;
                 idx += 1;
             } else {
                 return DoublyLinkedListErrors.OutOfBounds;
@@ -120,28 +119,28 @@ pub fn DoublyLinkedList(comptime T: type) type {
         }
 
         fn removeAt(self: *Self, index: usize) !void {
-            var current = self.head;
+            var head = self.head;
             var idx: usize = 0;
-            while (current) |curr| {
+            while (head) |current| {
                 if (idx == index) {
-                    if (curr.prev) |prev| {
-                        prev.next = curr.next;
+                    if (current.prev) |prev| {
+                        prev.next = current.next;
                     } else {
-                        self.head = curr.next;
+                        self.head = current.next;
                     }
 
-                    if (curr.next) |next| {
-                        next.prev = curr.prev;
+                    if (current.next) |next| {
+                        next.prev = current.prev;
                     } else {
-                        self.tail = curr.prev;
+                        self.tail = current.prev;
                     }
 
-                    self.allocator.destroy(curr);
+                    self.allocator.destroy(current);
                     self.size -= 1;
                     return;
                 }
                 idx += 1;
-                current = curr.next;
+                head = current.next;
             } else {
                 return DoublyLinkedListErrors.OutOfBounds;
             }

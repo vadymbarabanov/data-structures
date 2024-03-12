@@ -1,7 +1,7 @@
 const std = @import("std");
 const expect = std.testing.expect;
 
-const QueueErrors = error {
+const QueueErrors = error{
     QueueIsEmpty,
 };
 
@@ -32,25 +32,25 @@ pub fn Queue(comptime T: type) type {
         }
 
         pub fn deinit(self: *Self) void {
-            var current = self.head;
-            while (current) |curr| {
-                current = curr.next;
-                self.allocator.destroy(curr);
+            var head = self.head;
+            while (head) |current| {
+                head = current.next;
+                self.allocator.destroy(current);
             }
         }
 
-        pub fn enqueue(self: *Self, value: T) !void {
+        pub fn enqueue(self: *Self, data: T) !void {
             var node = try self.allocator.create(Node);
-            node.data = value;
+            node.data = data;
             node.next = null;
 
             if (self.tail) |tail| {
                 tail.next = node;
-                self.tail = node;
             } else {
                 self.head = node;
-                self.tail = node;
             }
+
+            self.tail = node;
             self.size += 1;
         }
 
@@ -97,4 +97,3 @@ test "dequeue" {
     try expect(try queue.dequeue() == 6);
     try expect(queue.size == 0);
 }
-

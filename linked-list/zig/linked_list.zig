@@ -32,42 +32,40 @@ pub fn LinkedList(comptime T: type) type {
         }
 
         pub fn deinit(self: *Self) void {
-            var current = self.head;
-            while (current) |curr| {
-                current = curr.next;
-                self.allocator.destroy(curr);
+            var head = self.head;
+            while (head) |current| {
+                head = current.next;
+                self.allocator.destroy(current);
             }
         }
 
-        pub fn append(self: *Self, value: T) !void {
+        pub fn append(self: *Self, data: T) !void {
             var node = try self.allocator.create(Node);
-            node.data = value;
+            node.data = data;
             node.next = null;
 
             if (self.tail) |tail| {
                 tail.next = node;
-                self.tail = node;
             } else {
                 self.head = node;
-                self.tail = node;
             }
 
+            self.tail = node;
             self.size += 1;
         }
 
-        pub fn prepend(self: *Self, value: T) !void {
+        pub fn prepend(self: *Self, data: T) !void {
             var node = try self.allocator.create(Node);
-            node.data = value;
+            node.data = data;
             node.next = null;
 
             if (self.head) |head| {
                 node.next = head;
-                self.head = node;
             } else {
-                self.head = node;
                 self.tail = node;
             }
 
+            self.head = node;
             self.size += 1;
         }
 
@@ -91,6 +89,7 @@ pub fn LinkedList(comptime T: type) type {
                     self.head = null;
                     self.tail = null;
                 }
+
                 self.allocator.destroy(head);
                 self.size -= 1;
             } else {
