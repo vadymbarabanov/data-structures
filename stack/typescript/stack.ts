@@ -8,13 +8,13 @@ export class Stack<T> {
     private _size: number = 0;
 
     public push(data: T) {
-        const node = new Node();
+        const node = new Node<T>();
         node.data = data;
         node.next = this.head;
         this.head = node;
         this._size += 1;
     }
-    
+
     public pop(): T | null {
         if (this.head === null) {
             return null;
